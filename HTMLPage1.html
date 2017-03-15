@@ -1,0 +1,121 @@
+﻿<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title></title>
+    <script>src = "https://unpkg.com/vue@2.2.2/dist/vue.js"</script>
+    <script>src = "./Master.js"</script>
+</head>
+<body>
+    <div id="app">
+    <div>
+        <div v-if="vm.visible" class="graph-overview col shadow" transition="toolbar">
+            <div class="header">
+                <h2>Found 
+                    <span class="accent">{{vm.items.length}}</span> products 
+                    <a href="#" class="close-panel" v-clap.prevent="hideList" title="collapse this list">
+                        <i class="material-icons">close</i>
+
+                    </a> 
+
+                </h2>
+
+                <div class="row">
+                    <div>Sort</div>
+                    <drop-click :items=vm.sortMethods :selected.sync=vm.selectedMethod v-on:change=vm.updateSort prefix=" by " class=sort-method></drop-click> 
+
+                </div> 
+
+            </div> 
+            <ul class=sort-results> 
+                <li v-for="item in vm.items" :title=item.title @mouseenter=highlightLinks(item) v-clap.prevent=showDetails(item) :data-asin=item.asin> 
+                    <div class=product-image> 
+                        <img class=cover :src=item.icon.URL> 
+
+                    </div> 
+                    <div class=product-details> 
+                        <h3>{{item.title}}</h3> 
+                        <component :is=currentSortValue :name=vm.selectedMethod :value=vm.getValue(item)></component> 
+
+                    </div> 
+
+                </li> 
+
+            </ul> 
+
+        </div> 
+        <a v-if=showListResults class="list-results shadow btn no-print" href=# v-clap.prevent=showList title="show the list of found products"> 
+            <i class=material-icons>list</i> 
+            <span class=label>List results</span> 
+
+        </a> 
+
+    </div>
+
+    <div> 
+        <div v-show=vm.visible class="details-container col" :class="{ \'list-open\': listOpen }"> 
+            <div class="mini-header row" v-if=miniVisible transition=expand> 
+                <a :href=product.link target=_blank title="Open on Amazon"> 
+                    <img :src=vm.product.icon.URL class=cover /> 
+
+                </a> 
+                <div class=mini-details> 
+                    <div class=row> 
+                        <h4 :title=vm.product.title>{{vm.product.title}}</h4> 
+                        <a :href=product.link class="accent tiny-link">Amazon</a> 
+
+                    </div> 
+                    <div class="row description"> 
+                        <price :vm=product></price> 
+                        <div class=buy-btn v-if=!product.price.hidden> 
+                            <a :href=product.link class=shop-btn target=_blank title="Open on Amazon"> 
+                                <img src=' + n(36) + '> 
+                                <div>Amazon</div> 
+
+                            </a> 
+
+                        </div> 
+
+                    </div> 
+
+                </div> 
+
+            </div> 
+            <div class="central-block col"> 
+                <div class=main-product-container v-el:container v-if=!reviewsVisible> 
+                    <div class=cover-container> 
+                        <a :href=product.link target=_blank title="Open on Amazon">
+                            <img :src=vm.product.image.URL class=cover>
+
+                        </a> 
+
+                    </div> 
+                    <div class=buy-btn> 
+                        <a :href=product.link class=shop-btn target=_blank title="Open on Amazon"> 
+                            <img src=' + n(36) + '> 
+                            <div>Amazon</div> 
+
+                        </a> 
+
+                    </div> 
+                    <attributes :product=vm.product class=attributes-container></attributes> 
+
+                </div> 
+                <div class=customer-reviews v-if=reviewsVisible> 
+                    <iframe :src=product.reviews></iframe> 
+
+                </div> 
+
+            </div> 
+            <div class=actions> 
+                <a href=# class="btn primary" v-clap.prevent=closeDetails> Close </a> 
+                <a href=# class="btn accent" v-clap.prevent=toggleReviews> {{toggleCustomerReviewsText}} </a> 
+
+            </div> 
+
+        </div> 
+
+     </div>
+</div>
+</body>
+</html>

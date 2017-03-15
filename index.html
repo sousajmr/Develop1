@@ -1,0 +1,114 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link href="font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="style.css" rel="stylesheet">
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="lodash.min.js"></script>
+    <script src="Filters.js"></script>
+ 
+
+
+</head>
+<body>
+   <div id="myvueinstance" class="container">
+    <div class="row">Notice List</div>
+ 
+    <input type="text" id="search" class="form-control" v-model="filterkey" placeholder="&#xf002; Search">
+ 
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th><a href="#" v-on:click="sortvia('id')">id</a></th>
+            <th><a href="#" v-on:click="sortvia('framework')">framework</a></th>
+        </tr>
+        </thead>
+ 
+        <tbody>
+        <tr v-for="framework in  FilterBy"> 
+                    <td>{{ framework.id }}</td>
+                    <td>{{ framework.framework }}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+                        <!-- | filterBy filterkey | orderBy sortparam order">-->
+<script>
+
+    var viewmodel = new Vue({
+        el: '#myvueinstance',
+
+        data: {
+            sortparam: '',
+
+            filterkey: '',
+
+            order: 1,
+
+            frameworks: [
+                { id: '001', framework: 'angular' },
+                { id: '002', framework: 'd3' },
+                { id: '003', framework: 'node' },
+                { id: '004', framework: 'jquery' },
+                { id: '005', framework: 'reveal.js' },
+                { id: '006', framework: 'impress.js' },
+                { id: '007', framework: 'backbone.js' },
+                { id: '008', framework: 'meteor.js' },
+                { id: '009', framework: 'express' },
+                { id: '010', framework: 'moment' },
+                { id: '011', framework: 'underscore' },
+                { id: '012', framework: 'gulp' },
+                { id: '013', framework: 'react' },
+                { id: '014', framework: 'ghost' },
+                { id: '015', framework: 'sweetalert' },
+                { id: '016', framework: 'select2' },
+            ]
+        },
+        computed: {
+            filteredFramework: function () {
+                var self = this
+                return self.frameworks.filter(function (framework) {
+                    debugger;
+                    return framework.id.indexOf(self.filterkey) !== -1;
+                })
+            },
+       
+            orderFrameworks: function (framewrk) {
+                debugger;
+                return _.orderBy(framewrk.frameworks, this.order)
+            },
+            FilterBy: function () {
+                //debugger;
+                var self = this
+                var f = new filterStack(self.frameworks)
+                var teste = f.apply()
+                return f.filterBy(this.filterkey /* string or function*/)
+                            .orderBy(this.frameworks,this.sortparam , this.order)
+                }
+        },
+        methods: {
+            sortvia: function (sortparam, order) {
+                
+                this.order = this.order * -1;
+                this.sortparam = sortparam;
+            }
+        }
+    });
+
+
+    Vue.component('alert', {
+
+        props: ['type', 'bold', 'msg'],
+
+        template: '<div class="alert alert-{{ type }}" role="alert"><b>{{ bold }}</b> {{ msg }}</div>'
+    });
+
+    var viewmodel = new Vue({
+        el: '#myvueinstance'
+    });
+</script>
+</body>
+
+</html>
